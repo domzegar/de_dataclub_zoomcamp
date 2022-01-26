@@ -1,0 +1,33 @@
+--q3
+SELECT COUNT(*)
+FROM yellow_taxi_data
+WHERE CAST(tpep_pickup_datetime AS DATE) = '2021-01-15'
+
+--q4
+SELECT
+	tpep_pickup_datetime,
+	tip_amount
+FROM yellow_taxi_data
+ORDER BY tip_amount DESC
+
+--q5
+SELECT
+COUNT(*) AS trips_from_central_park,
+de."Zone" AS destination_zone
+FROM yellow_taxi_data trips
+JOIN taxi_zone_lookup pu ON trips."PULocationID" = pu."LocationID"
+JOIN taxi_zone_lookup de ON trips."DOLocationID" = de."LocationID"
+WHERE pu."Zone" = 'Central Park' AND CAST(tpep_pickup_datetime AS DATE) = '2021-01-14'
+GROUP BY destination_zone
+ORDER BY trips_from_central_park DESC
+
+--q6
+SELECT
+AVG(trips."fare_amount") AS average_price,
+pu."Zone" AS pickup_zone,
+de."Zone" AS destination_zone
+FROM yellow_taxi_data trips
+JOIN taxi_zone_lookup pu ON trips."PULocationID" = pu."LocationID"
+JOIN taxi_zone_lookup de ON trips."DOLocationID" = de."LocationID"
+GROUP BY pu."Zone", de."Zone"
+ORDER BY average_price DESC
